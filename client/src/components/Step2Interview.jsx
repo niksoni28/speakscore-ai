@@ -116,7 +116,40 @@ window.speechSynthesis.speak(utterance);
 };
 
 
+useEffect(() =>{
+  if(!selectedVoice){
+    return;
+  }
+  const runIntro = async ()=>{
+    if(isIntroPhase){
+    await speakText(
+      `Hi ${userName}, it's great to meet you today. I hope you're feeling
+      confident and ready.`
+);
 
+  await speakText(
+    "I'll ask you a few questions. Just answer naturally, and take your time. Let's begin." 
+    
+);
+    setIsIntroPhase(false)
+  }else if(currentQuestion){
+    await new Promise(r => setTimeout(r, 800));
+
+  if (currentIndex === questions.length - 1) {
+  await speakText("Alright, Let's move on to the last question and it might be a bit more challenging.");
+}
+await speakText(currentQuestion.question);
+
+
+
+
+  }
+}
+
+runIntro()
+
+
+},[selectedVoice , isIntroPhase , currentIndex])
   
 return (
  

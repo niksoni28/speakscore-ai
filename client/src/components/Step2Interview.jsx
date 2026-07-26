@@ -4,9 +4,31 @@ import femaleVideo from "../assets/Videos/female-ai.mp4"
 import Timer from './Timer'
 import {motion} from "motion/react"
 import { FaMicrophone, FaMicrophoneSlash } from 'react-icons/fa'
+import { useState, useRef, useEffect } from 'react';
 
 function S2Interview({interviewData, onFinish}) {
-// const {interviewId, questions, userName} = interviewData
+const {interviewId, questions, userName} = interviewData
+const [isIntroPhase, setIsIntroPhase] = useState(true);
+
+const [isMicOn, setIsMicOn] = useState(true);
+const recognitionRef = useRef(null);
+const [isAIPlaying, setIsAIPlaying] = useState(false);
+
+const [currentIndex, setCurrentIndex] = useState(0);
+const [answer, setAnswer] = useState("");
+const [feedback, setFeedback] = useState("");
+const [timeLeft, setTimeLeft] = useState(
+questions[0]?.timeLimit || 60
+);
+const [selectedVoice, setSelectedVoice] = useState(null);
+const [isSubmitting, setIsSubmitting] = useState(false);
+const [voiceGender, setVoiceGender] = useState("female");
+const [subtitle, setSubtitle] = useState("");
+
+const videoRef = useRef(null);
+
+const currentQuestion = questions[currentIndex];
+
 
 return (
  
@@ -48,11 +70,11 @@ src={femaleVideo}
        <div className='h-px bg-gray-200'></div>
        <div className='grid grid-cols-2 gap-6 text-center'>
         <div>
-          <span className='text-2xl font-bold text-emerald-600'>1</span>
+          <span className='text-2xl font-bold text-emerald-600'>{currentIndex + 1}</span>
           <span className='text-xs text-gray-400'>Current Questions</span>
         </div>
         <div>
-          <span className='text-2xl font-bold text-emerald-600'>5</span>
+          <span className='text-2xl font-bold text-emerald-600'>{questions.length}</span>
           <span className='text-xs text-gray-400'>Total Questions</span>
         </div>
        </div>
@@ -69,10 +91,10 @@ src={femaleVideo}
     <div className='relative mb-6 bg-gray-50 p-4 sm:p-6 rounded -2xl
     border border-gray-200 shadow-sm'>
       <p className='text-xs sm:text-sm text-gray-400 mb-2'>
-        Question 1 of 5
+        Question {currentIndex + 1} of {questions.length}
       </p>
       <div className='text-base sm:text-lg font-semibold text-gray-800
-      leading-relaxed pr-16'>First Question</div>
+      leading-relaxed pr-16'>{currentQuestion?.question}</div>
     </div>
 
     <textarea

@@ -32,7 +32,7 @@ const currentQuestion = questions[currentIndex];
 useEffect(() => {
   const loadVoices = () => {
   const voices = window.speechSynthesis.getVoices();
-  if (!voices.length) return;
+  if (!voices.length || selectedVoice) return;
 
 
 const femaleVoice = voices.find(v =>
@@ -72,8 +72,8 @@ return;
 
 const videoSource = voiceGender === "male" ? maleVideo : femaleVideo;
 
-const speakText = (text) => {
-return new Promise((resolve) => {
+const speakText = async(text) => {
+return new Promise(async(resolve) => {
 if (!window.speechSynthesis || !selectedVoice) {
 resolve();
 return;
@@ -81,9 +81,12 @@ return;
 
 window.speechSynthesis.cancel();
 
+
+await new Promise((r) => setTimeout(r, 60));
+
 const humanText = text
-.replace(/,/g, ", ... ")
-.replace(/./g, ". ... ");
+  .replace(/,/g, ", ... ")
+  .replace(/\./g, ". ... ");
 
 const utterance = new SpeechSynthesisUtterance(humanText);
 utterance.voice = selectedVoice;
@@ -123,7 +126,7 @@ useEffect(() =>{
   const runIntro = async ()=>{
     if(isIntroPhase){
     await speakText(
-      `Hi ${userName}, it's great to meet you today. I hope you're feeling
+      `Hello  ${userName}, it's great to meet you today. I hope you're feeling
       confident and ready.`
 );
 
@@ -170,15 +173,15 @@ ref={videoRef}
     
     />
    </div>
-
-    {/* Subtitle*/}
-    {subtitle && (
-      <div className='w-full max-w-md bg-gray-50 border border-gray-200
-      rounded-xl p-4 shadow-sm'>
-        <p className='text-gray-700 text-sm sm:text-base font-medium
-        text-center leading-relaxed'> {subtitle} </p>
-      </div>
-    )}
+{/* Subtitle - always mounted, so layout never jumps */}
+    <div className='w-full max-w-md bg-gray-50 border border-gray-200
+    rounded-xl p-4 shadow-sm min-h-[88px] flex items-center justify-center'>
+      <p className={`text-gray-700 text-sm sm:text-base font-medium
+      text-center leading-relaxed transition-opacity duration-200
+      ${subtitle ? 'opacity-100' : 'opacity-0'}`}>
+        {subtitle || "…"}
+      </p>
+    </div>
 
 
 
@@ -222,6 +225,7 @@ ref={videoRef}
   <h2 className='text-xl sm:text-2xl font-bold text-emerald-600 mb-6'>
     AI Smart Interview  </h2>
 
+   { !isIntroPhase && (
     <div className='relative mb-6 bg-gray-50 p-4 sm:p-6 rounded -2xl
     border border-gray-200 shadow-sm'>
       <p className='text-xs sm:text-sm text-gray-400 mb-2'>
@@ -229,7 +233,8 @@ ref={videoRef}
       </p>
       <div className='text-base sm:text-lg font-semibold text-gray-800
       leading-relaxed pr-16'>{currentQuestion?.question}</div>
-    </div>
+    </div>)
+    }
 
     <textarea
     placeholder="Type your answer here..."

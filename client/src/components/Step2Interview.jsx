@@ -2,7 +2,7 @@ import React from 'react'
 import maleVideo from "../assets/Videos/male-ai.mp4"
 import femaleVideo from "../assets/Videos/female-ai.mp4"
 import Timer from './Timer'
-import {motion} from "motion/react"
+import {motion, time} from "motion/react"
 import { FaMicrophone, FaMicrophoneSlash } from 'react-icons/fa'
 import { useState, useRef, useEffect } from 'react';
 
@@ -153,6 +153,24 @@ runIntro()
 
 
 },[selectedVoice , isIntroPhase , currentIndex])
+
+useEffect(()=>{
+  if(isIntroPhase) return;
+  if(!currentQuestion)return
+  const timer = setInterval(() => {
+    setTimeLeft((prev)=>{
+      if(prev <= 1){
+        clearInterval(timer)
+        return 0;
+      }
+      return prev -1
+    })
+  },1000);
+
+  return ()=> clearInterval(timer) 
+
+
+},[isIntroPhase , currentIndex])
   
 return (
  
@@ -201,7 +219,8 @@ ref={videoRef}
 
       <div className='h-px bg-gray-200'></div>
       <div className='flex justify-center'>
-        <Timer timeLeft="30" totalTime="60"/>
+
+        <Timer timeLeft={timeLeft} totalTime={currentQuestion?.timeLimit }/>
       </div>
 
        <div className='h-px bg-gray-200'></div>

@@ -29,6 +29,49 @@ const videoRef = useRef(null);
 
 const currentQuestion = questions[currentIndex];
 
+useEffect(() => {
+  const loadVoices = () => {
+  const voices = window.speechSynthesis.getVoices();
+  if (!voices.length) return;
+
+
+const femaleVoice = voices.find(v =>
+  v.name.toLowerCase().includes("zira") ||
+  v.name.toLowerCase().includes("samantha") ||
+  v.name.toLowerCase().includes("female")
+);
+
+if (femaleVoice) {
+setSelectedVoice(femaleVoice);
+setVoiceGender("female");
+return;
+}
+
+ const maleVoice =
+  voices.find(v =>
+  v.name.toLowerCase().includes("david") ||
+  v.name.toLowerCase().includes("mark") ||
+  v.name.toLowerCase().includes("male")
+);
+
+  if (maleVoice) {
+    setSelectedVoice(maleVoice);
+    setVoiceGender("male");
+  return;
+}
+
+
+  setSelectedVoice(voices[0]);
+  setVoiceGender("female");
+  };
+
+  loadVoices();
+  window.speechSynthesis.onvoiceschanged = loadVoices;
+
+},[])
+
+
+
 
 return (
  

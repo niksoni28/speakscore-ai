@@ -3,6 +3,7 @@ import maleVideo from "../assets/Videos/male-ai.mp4"
 import femaleVideo from "../assets/Videos/female-ai.mp4"
 import Timer from './Timer'
 import {motion, time} from "motion/react"
+import {AnimatePresence} from "motion/react"
 import { FaMicrophone, FaMicrophoneSlash } from 'react-icons/fa'
 import { useState, useRef, useEffect } from 'react';
 
@@ -171,6 +172,9 @@ useEffect(()=>{
 
 
 },[isIntroPhase , currentIndex])
+
+
+
   
 return (
  
@@ -191,15 +195,25 @@ ref={videoRef}
     
     />
    </div>
-{/* Subtitle - always mounted, so layout never jumps */}
-    <div className='w-full max-w-md bg-gray-50 border border-gray-200
-    rounded-xl p-4 shadow-sm min-h-[88px] flex items-center justify-center'>
-      <p className={`text-gray-700 text-sm sm:text-base font-medium
-      text-center leading-relaxed transition-opacity duration-200
-      ${subtitle ? 'opacity-100' : 'opacity-0'}`}>
-        {subtitle || "…"}
-      </p>
-    </div>
+{/* Subtitle - animates open/closed, pushing content below smoothly */}
+    <AnimatePresence>
+      {subtitle && (
+        <motion.div
+          initial={{ height: 0, opacity: 0, marginTop: 0 }}
+          animate={{ height: "auto", opacity: 1, marginTop: 0 }}
+          exit={{ height: 0, opacity: 0, marginTop: 0 }}
+          transition={{ duration: 0.25, ease: "easeInOut" }}
+          className='w-full max-w-md overflow-hidden'
+        >
+          <div className='bg-gray-50 border border-gray-200 rounded-xl p-4 shadow-sm'>
+            <p className='text-gray-700 text-sm sm:text-base font-medium
+            text-center leading-relaxed'>
+              {subtitle}
+            </p>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
 
 
 
@@ -257,6 +271,8 @@ ref={videoRef}
 
     <textarea
     placeholder="Type your answer here..."
+    onChange={(e)=> setAnswer(e.target.value)}
+    value={answer}
     className="flex-1 bg-gray-100 p-4 sm:p-6 rounded-2xl resize-none
     outline-none border border-gray-200 focus:ring-2
     focus:ring-emerald-500 transition text-gray-800"/>

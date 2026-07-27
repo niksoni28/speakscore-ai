@@ -377,7 +377,7 @@ const avgCorrectness = totalQuestions
 }
     export const getMyInterviews = async (req,res) => {
     try {
-    const interview = await Interview.findOne({userId:req.userId})
+    const interview = await Interview.find({userId:req.userId})
     .sort({ createdAt: -1 })
     .select("role experience mode finalScore status createdAt");
     return res.status(200).json(interview)

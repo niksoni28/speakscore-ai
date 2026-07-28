@@ -36,18 +36,18 @@ function Auth({isModel = false}) {
        className={`w-full ${isModel ? "max-w-md p-8 rounded-3xl" : "max-w-lg p-12 rounded-[32px]"} bg-white shadow-2xl border border-gray-200`}>
 
         <div className='flex items-center justify-center gap-3 mb-6'>
-          <div className='bg-black text-white p-2 rounded-lg'>
-                <BsRobot size={18}/>
-          </div>
-          <h2 className='font-semibold text-lg'>InterviewIQ.AI</h2>
+        <div className='bg-black text-white p-2 rounded-lg'>
+        <BsRobot size={18}/>
+        </div>
+        <h2 className='font-semibold text-lg'>SpeakScore.AI</h2>
         </div>
 
         <h1 className='text-2xl md:text-3xl font-semibold text-center leading-snug mb-4'>
           Continue with{' '}
           <span className='bg-green-100 text-green-600 px-3 py-1 rounded-full inline-flex items-center gap-2'>
-            <IoSparkles size={16} />
+          <IoSparkles size={16} />
             AI Smart Interview
-          </span>
+        </span>
         </h1>
         <p className='text-gray-500 text-center text-sm md:text-base leading-relaxed mb-8'>
         Sign in to start AI-powered mock interviews,
@@ -63,7 +63,7 @@ function Auth({isModel = false}) {
         <FcGoogle size={20}/>
         Continue with Google
         </motion.button>
-      </motion.div>
+       </motion.div>
     )
 
   

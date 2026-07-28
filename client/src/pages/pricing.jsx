@@ -75,7 +75,7 @@ import { setUserData } from '../redux/userSlice';
         key: import.meta.env.VITE_RAZORPAY_KEY_ID,
         amount: result.data.amount,
         currency: "INR",
-        name: "InterviewIQ.AI",
+        name: "SpeakScore.AI",
         description: `${plan.name} - ${plan.credits} Credits`,
         order_id: result.data.id,
 
@@ -109,16 +109,16 @@ py-16 px-6'>
     className='mt-2 p-3 rounded-full bg-white shadow
       hover:shadow-md transition'>
     <FaArrowLeft className='text-gray-600' />
-  </button>
-  <div className='text-center w-full'>
-    <h1 className='text-4xl font-bold text-gray-800'>
+   </button>
+   <div className='text-center w-full'>
+   <h1 className='text-4xl font-bold text-gray-800'>
       Choose Your Plan
     </h1>
     <p className='text-gray-500 mt-3 text-lg'>
       Flexible pricing to match your interview preparation goals.
     </p>
-  </div>
-  </div>
+   </div>
+   </div>
     <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl
       mx-auto'>
     {plans.map((plan)=>{
@@ -142,29 +142,29 @@ border
     <div className="absolute top-6 right-6 bg-emerald-600
       text-white text-xs px-4 py-1 rounded-full shadow">
       {plan.badge}
-</div>
+  </div>
 )}
     {plan.default && (
     <div className="absolute top-6 right-6 bg-gray-200
     text-gray-700 text-xs px-3 py-1 rounded-full">
     Default
-</div>
+  </div>
 )}
     <h3 className="text-xl font-semibold text-gray-800">
     {plan.name}
-</h3>
+  </h3>
   <div className="mt-4">
    <span className="text-3xl font-bold text-emerald-600">
     {plan.price}
-</span>
-<p className="text-gray-500 mt-1">
+  </span>
+  <p className="text-gray-500 mt-1">
   {plan.credits} Credits
   </p>
-</div>
+  </div>
   
     <p className="text-gray-500 mt-4 text-sm leading-relaxed">
     {plan.description}
-  </p>
+   </p>
 
     <div className="mt-6 space-y-3 text-left">
     {plan.features.map((feature, i) => (
@@ -175,7 +175,7 @@ border
     </span>
   </div>
 ))}
-</div>
+  </div>
     {!plan.default &&
       <button disabled={loadingPlan ===plan.id}
       onClick={(e)=>{e.stopPropagation();
@@ -194,13 +194,13 @@ border
     : isSelected
     ? "Proceed to Pay"
     : "Select Plan"}
-</button>
+  </button>
 }
 
     </motion.div>
 )
 })}
-</div>
+  </div>
   </div>
 )
 }

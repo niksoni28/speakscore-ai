@@ -28,6 +28,11 @@ function S2Interview({ interviewData, onFinish }) {
     const videoRef = useRef(null);
     const currentQuestion = questions[currentIndex];
 
+  const isMicOnRef = useRef(isMicOn);
+  const isAIPlayingRef = useRef(isAIPlaying);
+  useEffect(() => { isMicOnRef.current = isMicOn; }, [isMicOn]);
+  useEffect(() => { isAIPlayingRef.current = isAIPlaying; }, [isAIPlaying]);
+
   useEffect(() => {
     const findFemaleVoice = (voices) => voices.find(v =>
       v.name.toLowerCase().includes("zira") ||
@@ -58,8 +63,11 @@ function S2Interview({ interviewData, onFinish }) {
         setVoiceGender(fallbackGender);
         return;
       }
-      setSelectedVoice(voices[0]);
-      setVoiceGender(PREFERRED_VOICE_GENDER);
+
+      const defaultVoice = voices[0];
+      const nameGuess = defaultVoice.name.toLowerCase().includes("male") ? "male" : "female";
+      setSelectedVoice(defaultVoice);
+      setVoiceGender(nameGuess);
     };
     loadVoices();
     window.speechSynthesis.onvoiceschanged = loadVoices;
@@ -182,6 +190,22 @@ function S2Interview({ interviewData, onFinish }) {
       const transcript = event.results[event.results.length - 1][0].transcript;
       setAnswer((prev) => prev + " " + transcript);
     };
+
+    recognition.onend = () => {
+      if (isMicOnRef.current && !isAIPlayingRef.current) {
+        try { recognition.start(); } catch {}
+      }
+    };
+
+    recognition.onerror = (event) => {
+    
+      if (event.error !== "not-allowed" && event.error !== "service-not-allowed") {
+        if (isMicOnRef.current && !isAIPlayingRef.current) {
+          try { recognition.start(); } catch {}
+        }
+      }
+    };
+
     recognitionRef.current = recognition;
   }, []);
 

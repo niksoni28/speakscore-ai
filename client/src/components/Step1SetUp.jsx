@@ -51,19 +51,19 @@ const handleUploadResume = async () => {
   }
 }
 
-const handleStart = async () => {
+  const handleStart = async () => {
   setLoading(true)
-  try {
+    try {
     const result = await axios.post(ServerUrl + "/api/interview/generate-questions" ,{role,experience,mode,resumeText, projects, skills}, {withCredentials:true})
-    console.log(result.data)
+     console.log(result.data)
     if (userData) {
       dispatch(setUserData({...userData, credits:result.data.creditsLeft}))
     }
     setLoading(false)
-    onStart(result.data)
-  } catch (error) {
-    console.log(error)
-    setLoading(false)
+      onStart(result.data)
+  }   catch (error) {
+      console.log(error)
+      setLoading(false)
   }
 }
 return (

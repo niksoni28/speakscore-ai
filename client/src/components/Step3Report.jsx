@@ -70,7 +70,6 @@ function Step3Report({ report }) {
 
   let currentY = 25;
 
-  // ======== TITLE ========
   doc.setFont("helvetica", "bold");
   doc.setFontSize(20);
   doc.setTextColor(34, 197, 94);
@@ -79,15 +78,11 @@ function Step3Report({ report }) {
 });
 
   currentY += 5;
-
-  // underline
   doc.setDrawColor(34, 197, 94);
   doc.line(margin, currentY + 2, pageWidth - margin, currentY + 2);
 
   currentY += 15;
 
-  // ================= FINAL SCORE BOX =================
- // ================= FINAL SCORE BOX =================
 doc.setFillColor(240, 253, 244);
 doc.roundedRect(margin, currentY, contentWidth, 20, 4, 4, "F");
 
@@ -101,7 +96,6 @@ doc.text(
 );
   currentY += 30;
 
-  // ================== SKILLS BOX ==================
   doc.setFillColor(249, 250, 251);
   doc.roundedRect(margin, currentY, contentWidth, 30, 4, 4, "F");
 
@@ -113,7 +107,6 @@ doc.text(
 
   currentY += 45;
 
-  // ========= ADVICE =========
   let advice = "";
 
   if (finalScore >= 8) {
@@ -138,7 +131,6 @@ doc.text(splitAdvice, margin + 10, currentY + 20);
 
 currentY += 50;
 
-// ===================== QUESTION TABLE =====================
 autoTable(doc, {
 startY: currentY,
 margin: { left: margin, right: margin },
@@ -172,7 +164,6 @@ fillColor: [249, 250, 251],
 
   doc.save("SpeakScore-AI-Interview_Report.pdf");
 };
-
 
   return (
     <div className='min-h-screen bg-linear-to-br from-gray-50 to-green-50 px-4
@@ -268,10 +259,7 @@ fillColor: [249, 250, 251],
 }
 </div>
       </motion.div>
-
-
       </div>
-
       <div className='lg:col-span-2 space-y-6' >
         <motion.div 
         initial = {{opacity:0}}
@@ -282,7 +270,6 @@ fillColor: [249, 250, 251],
        mb-4 sm:mb-6'>
         Performance Trend
        </h3>
-
         <div className='h-64 sm:h-72'>
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart data={questionScoreData}>
@@ -296,11 +283,9 @@ fillColor: [249, 250, 251],
               fill="#bbf7d0"
               strokeWidth={3}/>
             </AreaChart>
-
           </ResponsiveContainer>
         </div>
         </motion.div>
-
         <motion.div
          initial = {{opacity:0}}
         animate = {{opacity:1}}
@@ -314,7 +299,6 @@ fillColor: [249, 250, 251],
             {questionWiseScore.map((q,i)=>(
               <div key={i} className='bg-gray-50 p-4 sm:p-6 rounded-xl
               sm:rounded-2xl border border-gray-200'>
-              
               <div className='flex flex-col sm:flex-row sm:justify-between
               sm:items-start gap-3 mb-4'>
                 <div >
@@ -325,7 +309,6 @@ fillColor: [249, 250, 251],
                   {q.question || "Question not available"}
                   </p>
                 </div>
-
                 <div className='bg-green-100 text-green-600 px-3 py-1
                 rounded-full font-bold text-xs sm:text-sm w-fit'>
                   {q.score ?? 0}/10
@@ -342,7 +325,6 @@ fillColor: [249, 250, 251],
                   ? q.feedback
                   : "No feedback available for this question."}
                 </p>
-
               </div>
               </div>
             ))}
@@ -350,10 +332,6 @@ fillColor: [249, 250, 251],
         </motion.div>
       </div>
     </div>
-
-    
     </div>
-  )
-}
-
+  )}
 export default Step3Report

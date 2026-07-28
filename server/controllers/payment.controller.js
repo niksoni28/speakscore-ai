@@ -2,23 +2,17 @@ import Payment from "../models/payment.model.js";
 import razorpay from "../services/razorpay.service.js";
 import crypto from "crypto"
 import User from "../models/user.model.js";
-
-
-
-
 export const createOrder = async (req,res) => {
     try {
         const{planId, amount, credits} = req.body;
         if(!amount || !credits){
             return res.status(400).json({message: "Invalid plan data"});
         }
-
        const options = {
      amount: amount * 100,
      currency: "INR",
      receipt: `receipt_${Date.now()}`,
-    }
-        
+    }  
         const order = await razorpay.orders.create(options)
         await Payment.create({
         userId: req.userId,
@@ -31,12 +25,9 @@ export const createOrder = async (req,res) => {
         return res.json(order);
     } catch (error) {
         return res.status(500).json({message: `failed to create RazorPay order
-             ${error}`})
-
-        
+             ${error}`})  
     }
 }
-
  export const verifyPayment = async (req,res) => {
     try {
     const {razorpay_order_id,
@@ -65,12 +56,10 @@ export const createOrder = async (req,res) => {
     return res.json({ message: "Already processed" });
 }
 
-// Update payment record
     payment.status = "paid";
     payment.razorpayPaymentId = razorpay_payment_id;
     await payment.save();
 
-    // Add credits to user
     const updatedUser = await User.findByIdAndUpdate(payment.userId, {
     $inc: { credits: payment.credits }
     },{new:true});
@@ -80,7 +69,6 @@ export const createOrder = async (req,res) => {
     message: "Payment verified and credits added",
     user: updatedUser,
 });
-
 
 } catch (error) {
     return res.status(500).json({message: `failed to verify Razorpay Payment

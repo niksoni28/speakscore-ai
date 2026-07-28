@@ -27,8 +27,21 @@ function S2Interview({ interviewData, onFinish }) {
 
   const isMicOnRef = useRef(isMicOn);
   const isAIPlayingRef = useRef(isAIPlaying);
+
   useEffect(() => { isMicOnRef.current = isMicOn; }, [isMicOn]);
   useEffect(() => { isAIPlayingRef.current = isAIPlaying; }, [isAIPlaying]);
+
+  const setIsAIPlayingBoth = (value) => {
+    isAIPlayingRef.current = value;
+    setIsAIPlaying(value);
+  };
+  const setIsMicOnBoth = (value) => {
+    isMicOnRef.current = value;
+    setIsMicOn(value);
+  };
+
+
+  const isListeningRef = useRef(false);
 
   useEffect(() => {
     const findFemaleVoice = (voices) => voices.find(v =>
@@ -89,7 +102,8 @@ function S2Interview({ interviewData, onFinish }) {
       : text.split(/(?<=[.?!])\s+/).map(s => s.trim()).filter(Boolean);
 
     setSubtitle(text);
-    setIsAIPlaying(true);
+   
+    setIsAIPlayingBoth(true);
     stopMic();
     if (videoRef.current) {
       videoRef.current.loop = false;
@@ -105,8 +119,8 @@ function S2Interview({ interviewData, onFinish }) {
       videoRef.current.pause();
       videoRef.current.currentTime = 0;
     }
-    setIsAIPlaying(false);
-    if (isMicOn) startMic();
+    setIsAIPlayingBoth(false);
+    if (isMicOnRef.current) startMic();
 
     await new Promise((r) => setTimeout(r, 300));
     setSubtitle("");
@@ -127,7 +141,7 @@ function S2Interview({ interviewData, onFinish }) {
           await speakText("Alright, Let's move on to the last question and it might be a bit more challenging.");
         }
         await speakText(currentQuestion.question);
-        if (isMicOn) startMic();
+        if (isMicOnRef.current) startMic();
       }
     }
     runIntro()
@@ -161,22 +175,28 @@ function S2Interview({ interviewData, onFinish }) {
     recognition.continuous = true;
     recognition.interimResults = false;
 
+    recognition.onstart = () => {
+      isListeningRef.current = true;
+    };
+
     recognition.onresult = (event) => {
       const transcript = event.results[event.results.length - 1][0].transcript;
       setAnswer((prev) => prev + " " + transcript);
     };
 
     recognition.onend = () => {
+      isListeningRef.current = false;
       if (isMicOnRef.current && !isAIPlayingRef.current) {
-        try { recognition.start(); } catch {}
+        startMic();
       }
     };
 
     recognition.onerror = (event) => {
-     
+      isListeningRef.current = false;
+    
       if (event.error !== "not-allowed" && event.error !== "service-not-allowed") {
         if (isMicOnRef.current && !isAIPlayingRef.current) {
-          try { recognition.start(); } catch {}
+          startMic();
         }
       }
     };
@@ -184,19 +204,22 @@ function S2Interview({ interviewData, onFinish }) {
     recognitionRef.current = recognition;
   }, []);
 
+
   const startMic = () => {
-    if (recognitionRef.current && !isAIPlaying) {
+    if (recognitionRef.current && !isListeningRef.current && !isAIPlayingRef.current) {
       try { recognitionRef.current.start(); } catch {}
     }
   };
   const stopMic = () => {
-    if (recognitionRef.current) recognitionRef.current.stop();
+    if (recognitionRef.current && isListeningRef.current) {
+      try { recognitionRef.current.stop(); } catch {}
+    }
   };
 
   const toggleMic = () => {
     if (isMicOn) stopMic();
     else startMic();
-    setIsMicOn(!isMicOn);
+    setIsMicOnBoth(!isMicOn);
   };
 
   const submitAnswer = async () => {
@@ -234,12 +257,12 @@ function S2Interview({ interviewData, onFinish }) {
     }
     setCurrentIndex(nextIndex);
     setTimeout(() => {
-      if (isMicOn) startMic();
+      if (isMicOnRef.current) startMic();
     }, 500);
   }
   const finishInterview = async () => {
     stopMic()
-    setIsMicOn(false)
+    setIsMicOnBoth(false)
     try {
       const result = await axios.post(`${ServerUrl}/api/interview/finish`, { interviewId }, { withCredentials: true })
       console.log(result.data)

@@ -1,5 +1,6 @@
 import React from 'react'
 import { BsRobot } from 'react-icons/bs'
+import { FaLinkedin, FaGithub, FaEnvelope } from 'react-icons/fa'
 
 const footer = () => {
   return (
@@ -15,6 +16,45 @@ const footer = () => {
                 communication skills, technical depth and professional confidence.
             </p>
 
+        
+            <div className='flex justify-center gap-3 mt-5 mb-4'>
+                <a href="https://linkedin.com/in/YOUR_USERNAME" target="_blank"
+                    rel="noopener noreferrer"
+                    className='w-9 h-9 rounded-full bg-white border border-gray-200
+                    flex items-center justify-center text-emerald-600
+                    hover:bg-emerald-50 hover:border-emerald-300 transition'>
+                    <FaLinkedin size={16} />
+                </a>
+                <a href="https://github.com/YOUR_USERNAME" target="_blank"
+                    rel="noopener noreferrer"
+                    className='w-9 h-9 rounded-full bg-white border border-gray-200
+                    flex items-center justify-center text-emerald-600
+                    hover:bg-emerald-50 hover:border-emerald-300 transition'>
+                    <FaGithub size={16} />
+                </a>
+                <a href="mailto:YOUR_EMAIL@example.com"
+           className='w-9 h-9 rounded-full bg-white border border-gray-200
+                    flex items-center justify-center text-emerald-600
+           hover:bg-emerald-50 hover:border-emerald-300 transition'>
+                    <FaEnvelope size={16} />
+                </a>
+            </div>
+
+        
+    <a href="https://your-portfolio-url.com" target="_blank"
+      rel="noopener noreferrer"
+     className='inline-block text-xs font-medium text-emerald-600
+     bg-emerald-50 border border-emerald-200 px-4 py-1.5
+     rounded-full hover:bg-emerald-100 transition mb-3'>
+  Checkout my personal portfolio →
+            </a>
+
+            
+    <p className='text-xs text-gray-500 border-t border-gray-200
+                pt-3 mt-2 max-w-xs mx-auto'>
+                Have a suggestion or feedback? I'd love to hear from you —
+                reach out anytime.
+            </p>
 
         </div>
 

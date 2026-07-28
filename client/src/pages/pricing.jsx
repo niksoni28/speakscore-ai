@@ -2,10 +2,16 @@ import React, { useState } from 'react'
 import { FaArrowLeft, FaCheckCircle } from 'react-icons/fa'
 import { useNavigate } from 'react-router'
 import {motion, scale} from "motion/react";
+import axios from 'axios';
+import { ServerUrl } from '../App';
+import { useDispatch } from 'react-redux';
+import { setUserData } from '../redux/userSlice';
 
   function Pricing() {
     const navigate = useNavigate()
     const [selectedPlan, setSelectedPlan] = useState("free");
+    const [loadingPlan, setLoadingPlan] = useState(null);
+   const dispatch = useDispatch();
     const plans = [
 {
   id: "free",
@@ -50,6 +56,52 @@ import {motion, scale} from "motion/react";
 },
     ];
 
+    const handlePayment = async (plan) => {
+      try {
+        setLoadingPlan(plan.id)
+
+        const amount = 
+        plan.id === "basic" ? 100 :
+        plan.id === "pro" ? 500 : 0;
+        
+       const result = await axios.post(ServerUrl + "/api/payment/order", {
+    planId: plan.id,
+    amount: amount,
+    credits: plan.credits,
+  }, { withCredentials: true })
+      
+
+        const options = {
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+        amount: result.data.amount,
+        currency: "INR",
+        name: "InterviewIQ.AI",
+        description: `${plan.name} - ${plan.credits} Credits`,
+        order_id: result.data.id,
+
+        handler:async function (response) {
+          const verifypay = await axios.post(ServerUrl + "/api/payment/verify" , 
+            response, {withCredentials:true})
+            dispatch(setUserData(verifypay.data.user))
+            alert("Payment Successful 💸 Credits Added!");
+            navigate("/")
+      },
+      theme:{
+      color: "#10b981",
+    },
+  }      
+
+      const rzp = new window.Razorpay(options)
+      rzp.open()
+
+      setLoadingPlan(null);
+      } catch (error) {
+        console.log(error)
+         setLoadingPlan(null);
+        
+      }
+      
+    }
 
 
 
@@ -143,11 +195,23 @@ border
 ))}
 </div>
     {!plan.default &&
-      <button className={`w-full mt-8 py-3 rounded-xl font-semibold transition ${isSelected
+      <button disabled={loadingPlan ===plan.id}
+      onClick={(e)=>{e.stopPropagation();
+        if(!isSelected){
+          setSelectedPlan(plan.id)
+        }else{
+          handlePayment(plan)
+        }
+      }}
+      className={`w-full mt-8 py-3 rounded-xl font-semibold transition ${isSelected
       ? "bg-emerald-600 text-white hover:opacity-90"
       : "bg-gray-100 text-gray-700 hover:bg-emerald-50"
   }`}>
-    {isSelected ? "Proceed to pay" : "Select Plan"}
+   {loadingPlan === plan.id
+    ? "Processing..."
+    : isSelected
+    ? "Proceed to Pay"
+    : "Select Plan"}
 </button>
 }
 

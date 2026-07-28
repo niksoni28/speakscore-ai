@@ -11,7 +11,7 @@ import InterviewReport from './pages/InterviewReport';
 import InterviewHistory  from './pages/InterviewHistory';
 import Home from "./pages/Home";
 
-export const ServerUrl = "http://localhost:8000";
+export const ServerUrl = "https://speakscore-ai-ftza.onrender.com";
 
 function App() {
   const dispatch= useDispatch()

@@ -19,8 +19,7 @@ function NavBar() {
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const [showAuth, setShowAuth] = useState(false);
-
-const handleLogout = async () => {
+    const handleLogout = async () => {
 try {
 await axios.get(ServerUrl + "/api/auth/logout",
 {withCredentials:true})
@@ -45,10 +44,8 @@ navigate("/")
         <div className='bg-black text-white p-2 rounded-lg'>
         <BsRobot size={18}/>
     </div>
-
     <h1 className='font-semibold  md:block text-lg'>SpeakScore.AI</h1>
     </div>
-
     <div className='flex items-center gap-6 relative'>
     <div className='relative'>
     <button onClick={() => {
@@ -71,20 +68,20 @@ navigate("/")
         )}
     </div>
 
-<div className='relative'>
-<button
-onClick={() => {
+    <div className='relative'>
+    <button
+    onClick={() => {
       if(!userData){
         setShowAuth(true)
         return;
     }
     setShowUserPopup(!showUserPopup);
     setShowCreditPopup(false) }}
-className='w-9 h-9 bg-black text-white rounded-full
-flex items-center justify-center font-semibold'>
-{userData ? userData?.name.slice(0,1).toUpperCase()
-: <FaUserAstronaut size={16}/>}
-</button>
+    className='w-9 h-9 bg-black text-white rounded-full
+    flex items-center justify-center font-semibold'>
+    {userData ? userData?.name.slice(0,1).toUpperCase()
+    : <FaUserAstronaut size={16}/>}
+    </button>
         {showUserPopup &&(
             <div className='absolute right-0 mt-3 w-48 bg-white shadow-xl border-gray-200 rounded-xl p-4 z-50'>
             <p className='text-md text-blue-500 font-medium mb-1'>{userData?.name}</p>
@@ -99,14 +96,9 @@ flex items-center justify-center font-semibold'>
         )}
     </div>
     </div>
-           
-                
-            
-        </motion.div>
-
+    </motion.div>
       {showAuth && <AuthModel onClose={()=>setShowAuth(false)}/>}
      </div>
   )
 }
-
 export default NavBar

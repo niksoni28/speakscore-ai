@@ -70,8 +70,7 @@ return (
 
 
 <motion.div
-
-    initial={{ opacity: 0 }}
+  initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
     transition={{ duration: 0.6 }}
     className='min-h-screen flex items-center justify-center
@@ -82,7 +81,6 @@ return (
       initial={{x: -80, opacity:0}}
       animate={{x:0 , opacity:1}}
       transition={{ duration: 0.7}}
-      
       className='relative bg-gradient-to-br
       from-green-50 to-green-100 p-12 flex flex-col
       justify-center'>
@@ -96,10 +94,9 @@ return (
       </p>
 
         <div className='space-y-5'>
-
-        {
+         {
           [
-            {
+          {
         icon: <FaUserTie className="text-green-600 text-xl" />,
         text: "Choose Role & Experience",
 },
@@ -119,8 +116,7 @@ return (
         whileHover={{ scale: 1.03 }}
         className='flex items-center space-x-4 bg-white p-4
         rounded-xl shadow-sm cursor-pointer'>
-
-          {item.icon}
+         {item.icon}
           <span className='text-gray-700 font-medium'>
             {item.text}
           </span>
@@ -130,16 +126,8 @@ return (
         }
 </div>
 
-
-
-
-      </motion.div>
-
-        
-
-
-      
-     <motion.div
+      </motion.div> 
+      <motion.div
         initial={{ x: 80, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         transition={{ duration: 0.7 }}
@@ -169,10 +157,8 @@ return (
         transition'
         onChange={(e)=>setExperience(e.target.value)} value={experience} />
 
-
       </div>
 
-      
         <select value={mode}
         onChange={(e)=> setMode (e.target.value)}
         className='w-full py-3 px-4 border
@@ -182,7 +168,7 @@ return (
         <option value="HR">HR Interview</option>
         </select>
 
-        {!analysisDone && (
+         {!analysisDone && (
           <motion.div 
           whileHover={{scale:1.02}}
           onClick={()=>document.getElementById("resumeUpload").click()}
@@ -208,10 +194,7 @@ return (
               px-5 py-2 rounded-lg hover:bg-gray-800 transition'>
                {analyzing ? "Analyzing...": "Analyze Resume"}
 
-              
             </motion.button>)}
-
-
           </motion.div>
         )}
 
@@ -228,24 +211,24 @@ return (
             <div>
             <p className='font-medium text-gray-700 mb-1'>
               Projects:  </p>
-              <ul className='list-disc list-inside text-gray-600 space-y-1' >
+            <ul className='list-disc list-inside text-gray-600 space-y-1' >
                 {projects.map((p,i) =>(
                   <li key={i}>{p}</li>
                 ))}
-              </ul>
+             </ul>
             </div>
           )}
 
           {skills.length >0 &&(
-            <div>
-            <p className='font-medium text-gray-700 mb-1'>
+          <div>
+          <p className='font-medium text-gray-700 mb-1'>
               Skills:  </p>
-              <div className='flex flex-wrap gap-2' >
+          <div className='flex flex-wrap gap-2' >
                 {skills.map((s,i) =>(
-                  <span key={i} className='bg-green-100 text-green-70
+          <span key={i} className='bg-green-100 text-green-70
                   px-3 py-1 rounded-full text-sm'>{s}</span>
                 ))}
-              </div>
+           </div>
             </div>
           )}
     </motion.div>
@@ -263,14 +246,11 @@ return (
             {loading ? "starting...":"Start Interview"}
       </motion.button>
 
-</div>
+  </div>
 
 
-</motion.div>
-</div>
-</motion.div>
-
-)
-}
-
+  </motion.div>
+  </div>
+  </motion.div>
+)}
 export default Step1Setup

@@ -1,6 +1,5 @@
 import React from 'react'
 import { Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
 import Auth from "./pages/Auth";
 import InterviewPage from './pages/InterviewPage';
 import { useEffect } from 'react';
@@ -10,6 +9,7 @@ import { setUserData } from './redux/userSlice';
 import Pricing from './pages/Pricing'
 import InterviewReport from './pages/InterviewReport';
 import InterviewHistory  from './pages/InterviewHistory';
+import Home from "./pages/Home";
 
 export const ServerUrl = "http://localhost:8000";
 

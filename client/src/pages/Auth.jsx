@@ -65,10 +65,7 @@ function Auth({isModel = false}) {
         </motion.button>
        </motion.div>
     )
-
-  
     if (isModel) return card
-
   
     return (
       <div className='w-full min-h-screen bg-[#f3f3f3] flex items-center justify-center px-6 py-20'>
@@ -76,5 +73,4 @@ function Auth({isModel = false}) {
       </div>
     )
 }
-
 export default Auth

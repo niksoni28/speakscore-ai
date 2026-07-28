@@ -15,10 +15,8 @@ const footer = () => {
                 AI-powered interview preparation platform designed to improve
                 communication skills, technical depth and professional confidence.
             </p>
-
-        
         <div className='flex justify-center gap-3 mt-5 mb-4'>
-          <a href="https://www.linkedin.com/in/nikhil-soni-2b080228b/" target="_blank"
+        <a href="https://www.linkedin.com/in/nikhil-soni-2b080228b/" target="_blank"
                     rel="noopener noreferrer"
                     className='w-9 h-9 rounded-full bg-white border border-gray-200
                     flex items-center justify-center text-emerald-600
@@ -40,26 +38,22 @@ const footer = () => {
                 </a>
         </div>
 
-        
      <a href="https://your-portfolio-url.com" target="_blank"
       rel="noopener noreferrer"
      className='inline-block text-xs font-medium text-emerald-600
      bg-emerald-50 border border-emerald-200 px-4 py-1.5
      rounded-full hover:bg-emerald-100 transition mb-3'>
-    Checkout my personal portfolio →
+     Checkout my personal portfolio →
             </a>
 
-            
     <p className='text-xs text-gray-500 border-t border-gray-200
                 pt-3 mt-2 max-w-xs mx-auto'>
                 Have a suggestion or feedback? I'd love to hear from you —
                 reach out anytime.
             </p>
-
     </div>
 
     </div>
   )
 }
-
 export default footer

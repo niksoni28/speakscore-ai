@@ -23,7 +23,6 @@ import { FaArrowLeft } from 'react-icons/fa'
         getMyInterviews()   
 }, [])
 
-
 return(
     <div className='min-h-screen bg-linear-to-br from-gray-50 to-emerald-50
     py-10'>
@@ -106,15 +105,8 @@ return(
 
            ))
         }
-            
-
         </div> }
  </div>
- </div>
-    
-      
+ </div>   
 )}
-  
-
-
 export default InterviewHistory

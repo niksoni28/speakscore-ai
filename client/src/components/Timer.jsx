@@ -18,5 +18,4 @@ trailColor: "#e5e7eb",
   </div>
 )
 }
-
 export default Timer

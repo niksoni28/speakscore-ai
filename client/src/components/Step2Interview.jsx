@@ -1,5 +1,4 @@
 import React from 'react'
-import maleVideo from "../assets/Videos/male-ai.mp4"
 import femaleVideo from "../assets/Videos/female-ai.mp4"
 import Timer from './Timer'
 import { motion, time } from "motion/react"
@@ -9,7 +8,6 @@ import { useState, useRef, useEffect } from 'react'
 import axios from "axios"
 import { ServerUrl } from '../App'
 import { BsArrowBarLeft, BsArrowLeft, BsArrowRight } from 'react-icons/bs'
-const PREFERRED_VOICE_GENDER = "female";
 
 function S2Interview({ interviewData, onFinish }) {
   const { interviewId, questions, userName } = interviewData
@@ -23,7 +21,6 @@ function S2Interview({ interviewData, onFinish }) {
     const [timeLeft, setTimeLeft] = useState(questions[0]?.timeLimit || 60);
     const [selectedVoice, setSelectedVoice] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
-  const [voiceGender, setVoiceGender] = useState("female");
     const [subtitle, setSubtitle] = useState("");
     const videoRef = useRef(null);
     const currentQuestion = questions[currentIndex];
@@ -39,41 +36,19 @@ function S2Interview({ interviewData, onFinish }) {
         v.name.toLowerCase().includes("samantha") ||
        v.name.toLowerCase().includes("female")
     );
-    const findMaleVoice = (voices) => voices.find(v =>
-       v.name.toLowerCase().includes("david") ||
-       v.name.toLowerCase().includes("mark") ||
-       v.name.toLowerCase().includes("male")
-    );
 
     const loadVoices = () => {
       const voices = window.speechSynthesis.getVoices();
       if (!voices.length || selectedVoice) return;
-     const preferredFinder = PREFERRED_VOICE_GENDER === "male" ? findMaleVoice : findFemaleVoice;
-      const fallbackFinder = PREFERRED_VOICE_GENDER === "male" ? findFemaleVoice : findMaleVoice;
-      const fallbackGender = PREFERRED_VOICE_GENDER === "male" ? "female" : "male";
-      const preferredVoice = preferredFinder(voices);
-      if (preferredVoice) {
-        setSelectedVoice(preferredVoice);
-        setVoiceGender(PREFERRED_VOICE_GENDER);
-        return;
-      }
-      const fallbackVoice = fallbackFinder(voices);
-      if (fallbackVoice) {
-        setSelectedVoice(fallbackVoice);
-        setVoiceGender(fallbackGender);
-        return;
-      }
 
-      const defaultVoice = voices[0];
-      const nameGuess = defaultVoice.name.toLowerCase().includes("male") ? "male" : "female";
-      setSelectedVoice(defaultVoice);
-      setVoiceGender(nameGuess);
+      const femaleVoice = findFemaleVoice(voices);
+      setSelectedVoice(femaleVoice || voices[0]);
     };
     loadVoices();
     window.speechSynthesis.onvoiceschanged = loadVoices;
   }, [])
 
-  const videoSource = voiceGender === "male" ? maleVideo : femaleVideo;
+  const videoSource = femaleVideo;
 
   useEffect(() => {
     const videoEl = videoRef.current;
@@ -198,7 +173,7 @@ function S2Interview({ interviewData, onFinish }) {
     };
 
     recognition.onerror = (event) => {
-    
+     
       if (event.error !== "not-allowed" && event.error !== "service-not-allowed") {
         if (isMicOnRef.current && !isAIPlayingRef.current) {
           try { recognition.start(); } catch {}

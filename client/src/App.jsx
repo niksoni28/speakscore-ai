@@ -7,7 +7,7 @@ import { useEffect } from 'react';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { setUserData } from './redux/userSlice';
-import pricing from './pages/pricing';
+import Pricing from './pages/Pricing'
 import InterviewReport from './pages/InterviewReport';
 import InterviewHistory  from './pages/InterviewHistory';
 
@@ -34,7 +34,7 @@ function App() {
     <Route path='/auth' element={<Auth/>}/>
     <Route path='/interview' element={<InterviewPage/>}/>
     <Route path='/history' element={<InterviewHistory/>}/>
-    <Route path='/pricing' element={<pricing/>}/>
+    <Route path='/pricing' element={<Pricing/>}/>
     <Route path='/report/:id' element={<InterviewReport/>}/>
 
 

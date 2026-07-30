@@ -38,7 +38,7 @@ const footer = () => {
                 </a>
         </div>
 
-     <a href="https://your-portfolio-url.com" target="_blank"
+     <a href="https://nikportfolio-psi.vercel.app/" target="_blank"
       rel="noopener noreferrer"
      className='inline-block text-xs font-medium text-emerald-600
      bg-emerald-50 border border-emerald-200 px-4 py-1.5

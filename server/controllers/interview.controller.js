@@ -15,7 +15,7 @@ export const analyzeResume = async (req , res) => {
         const fileBuffer = await fs.promises.readFile(filepath)
         const unit8Array = new Uint8Array(fileBuffer)
 
-        const pdf = await pdfjsLib.getDocument({data:unit8Array}).promise
+        const pdf = await pdfjsLib.getDocument({data:Uint8Array}).promise
 
         let resumeText = "";
 
@@ -244,22 +244,41 @@ Calculate:
 finalScore = average of confidence, communication, and correctness (rounded to
 nearest whole number).
 
-Feedback Rules:
-- Write natural, human-like interview feedback based ONLY on the candidate's response.
-- Every suggestion must be specific to the response. Avoid generic interview advice.
-- Never use repetitive phrases such as:
-  - "Try to present your thoughts more specifically."
-  - "Be more confident."
-  - "Improve your communication."
-  unless they are genuinely supported by the response.
-- If suggesting an improvement, explain exactly what is missing or could be improved.
-- Mention at least one positive aspect of the response whenever possible.
-- Focus on content first, then clarity, then communication.
-- If the response is already strong, explicitly say so instead of inventing unnecessary improvements.
-- Keep the tone professional, balanced, and constructive.
-- Do NOT repeat the interview question.
-- Do NOT explain the score.
-- Keep feedback concise (50–120 words).
+INTERVIEW FEEDBACK INSTRUCTIONS
+
+Input: The candidate's response is a speech-to-text (STT) transcript and may contain transcription errors.
+
+Rule 1 — Ignore transcription noise:
+Do not evaluate, mention, or criticize spelling, grammar, punctuation, capitalization, or typos. Treat these as STT artifacts, not candidate errors. Judge only the substance of what was said.
+
+Rule 2 — Strict prohibition on language-mechanics feedback:
+Under no circumstances should feedback include any comment, correction, or observation about spelling, grammar, or typographical errors — even if they appear severe, repeated, or unusual. This rule applies strictly and has no exceptions.
+
+Rule 3 — Base feedback only on the response:
+Do not reference the interview question, external context, or assumptions beyond what the candidate actually said.
+
+Rule 4 — Be specific, not generic:
+Every point (positive or improvement) must reference something concrete from the response — a specific claim, example, omission, or reasoning gap. Never use generic filler advice such as "be more confident," "communicate better," or "be more specific," unless tied directly to a specific gap in this response.
+
+Rule 5 — Explain improvements clearly:
+When suggesting an improvement, state exactly what was missing, unclear, or could be strengthened — not just that it "could be better."
+
+Rule 6 — Include a positive:
+Mention at least one genuine strength of the response, if one exists.
+
+Rule 7 — Priority order:
+Evaluate in this order: (1) content/substance, (2) clarity of explanation, (3) communication delivery.
+
+Rule 8 — If the response is strong:
+Say so explicitly rather than manufacturing an unnecessary critique.
+
+Rule 9 — Tone:
+Professional, balanced, and constructive — not harsh, not overly praising.
+
+Rule 10 — Format constraints:
+- Do not repeat the interview question.
+- Do not explain or justify the score.
+- Total feedback length: 10–40 words.
 
 Return ONLY valid JSON in this format:
 {

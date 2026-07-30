@@ -27,6 +27,8 @@ function S2Interview({ interviewData, onFinish }) {
 
   const isMicOnRef = useRef(isMicOn);
   const isAIPlayingRef = useRef(isAIPlaying);
+ 
+  const isActiveRef = useRef(true);
 
   useEffect(() => { isMicOnRef.current = isMicOn; }, [isMicOn]);
   useEffect(() => { isAIPlayingRef.current = isAIPlaying; }, [isAIPlaying]);
@@ -93,16 +95,19 @@ function S2Interview({ interviewData, onFinish }) {
       window.speechSynthesis.speak(utterance);
     });
   };
+
   const speakText = async (text, { noPause = false } = {}) => {
-    if (!window.speechSynthesis || !selectedVoice) return;
+    if (!window.speechSynthesis || !selectedVoice || !isActiveRef.current) return;
     window.speechSynthesis.cancel();
     await new Promise((r) => setTimeout(r, 60));
+    if (!isActiveRef.current) return; // bailed out / unmounted while waiting
+
     const sentences = noPause
       ? [text.trim()]
       : text.split(/(?<=[.?!])\s+/).map(s => s.trim()).filter(Boolean);
 
     setSubtitle(text);
-   
+
     setIsAIPlayingBoth(true);
     stopMic();
     if (videoRef.current) {
@@ -112,17 +117,21 @@ function S2Interview({ interviewData, onFinish }) {
     }
     for (let i = 0; i < sentences.length; i++) {
       await speakOne(sentences[i]);
+      if (!isActiveRef.current) return; // unmounted mid-speech, stop right here
       if (i < sentences.length - 1) {
         await new Promise(r => setTimeout(r, 250));
-      }}
+        if (!isActiveRef.current) return;
+      }
+    }
     if (videoRef.current) {
       videoRef.current.pause();
       videoRef.current.currentTime = 0;
     }
     setIsAIPlayingBoth(false);
-    if (isMicOnRef.current) startMic();
+    if (isMicOnRef.current && isActiveRef.current) startMic();
 
     await new Promise((r) => setTimeout(r, 300));
+    if (!isActiveRef.current) return;
     setSubtitle("");
   };
   useEffect(() => {
@@ -133,15 +142,18 @@ function S2Interview({ interviewData, onFinish }) {
           `Hello ${userName}, it's great to meet you today. I hope you're feeling confident and ready. I'll ask you a few questions. Just answer naturally, and take your time. Let's begin.`,
           { noPause: true }
         );
+        if (!isActiveRef.current) return;
         setIsIntroPhase(false)
       } else if (currentQuestion) {
         await new Promise(r => setTimeout(r, 800));
+        if (!isActiveRef.current) return;
 
         if (currentIndex === questions.length - 1) {
           await speakText("Alright, Let's move on to the last question and it might be a bit more challenging.");
         }
+        if (!isActiveRef.current) return;
         await speakText(currentQuestion.question);
-        if (isMicOnRef.current) startMic();
+        if (isMicOnRef.current && isActiveRef.current) startMic();
       }
     }
     runIntro()
@@ -186,6 +198,7 @@ function S2Interview({ interviewData, onFinish }) {
 
     recognition.onend = () => {
       isListeningRef.current = false;
+      if (!isActiveRef.current) return; 
       if (isMicOnRef.current && !isAIPlayingRef.current) {
         startMic();
       }
@@ -193,7 +206,8 @@ function S2Interview({ interviewData, onFinish }) {
 
     recognition.onerror = (event) => {
       isListeningRef.current = false;
-    
+      if (!isActiveRef.current) return; 
+
       if (event.error !== "not-allowed" && event.error !== "service-not-allowed") {
         if (isMicOnRef.current && !isAIPlayingRef.current) {
           startMic();
@@ -206,6 +220,7 @@ function S2Interview({ interviewData, onFinish }) {
 
 
   const startMic = () => {
+    if (!isActiveRef.current) return;
     if (recognitionRef.current && !isListeningRef.current && !isAIPlayingRef.current) {
       try { recognitionRef.current.start(); } catch {}
     }
@@ -233,12 +248,13 @@ function S2Interview({ interviewData, onFinish }) {
         answer,
         timeTaken: currentQuestion.timeLimit - timeLeft,
       }, { withCredentials: true })
+      if (!isActiveRef.current) return;
       setFeedback(result.data.feedback)
       speakText(result.data.feedback)
       setIsSubmitting(false)
     } catch (error) {
       console.log(error)
-      setIsSubmitting(false)
+      if (isActiveRef.current) setIsSubmitting(false)
     }
   }
   const handleNext = async () => {
@@ -255,9 +271,10 @@ function S2Interview({ interviewData, onFinish }) {
     if (!nextIsLast) {
       await speakText("Alright, let's move to the next question.");
     }
+    if (!isActiveRef.current) return;
     setCurrentIndex(nextIndex);
     setTimeout(() => {
-      if (isMicOnRef.current) startMic();
+      if (isMicOnRef.current && isActiveRef.current) startMic();
     }, 500);
   }
   const finishInterview = async () => {
@@ -266,7 +283,7 @@ function S2Interview({ interviewData, onFinish }) {
     try {
       const result = await axios.post(`${ServerUrl}/api/interview/finish`, { interviewId }, { withCredentials: true })
       console.log(result.data)
-      onFinish(result.data)
+      if (isActiveRef.current) onFinish(result.data)
     } catch (error) {
       console.log(error)
     }}
@@ -277,15 +294,25 @@ function S2Interview({ interviewData, onFinish }) {
       submitAnswer();
     }
   }, [timeLeft]);
+
   useEffect(() => {
+    isActiveRef.current = true; 
     return () => {
+      isActiveRef.current = false;
+      isMicOnRef.current = false;
+
       if (recognitionRef.current) {
-        recognitionRef.current.stop();
-        recognitionRef.current.abort();
+     
+        recognitionRef.current.onstart = null;
+        recognitionRef.current.onresult = null;
+        recognitionRef.current.onend = null;
+        recognitionRef.current.onerror = null;
+        try { recognitionRef.current.stop(); } catch {}
+        try { recognitionRef.current.abort(); } catch {}
       }
       window.speechSynthesis.cancel();
     };
-  }, []); 
+  }, []);
   return (
       <div className='min-h-screen bg-linear-to-br from-emerald-50 via-white to-teal-100 flex items-center justify-center p-4 sm:p-6'>
       <div className='w-full max-w-350 min-h-[80vh] bg-white rounded-3xl shadow-2xl border border-gray-200 flex flex-col lg:flex-row overflow-hidden'>

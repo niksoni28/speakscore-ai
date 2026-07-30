@@ -245,13 +245,21 @@ finalScore = average of confidence, communication, and correctness (rounded to
 nearest whole number).
 
 Feedback Rules:
-- Write natural human feedback.
-- 10 to 15 words only.
-- Sound like real interview feedback.
-- Can suggest improvement if needed.
-- Do NOT repeat the question.
-- Do NOT explain scoring.
-- Keep tone professional and honest.
+- Write natural, human-like interview feedback based ONLY on the candidate's response.
+- Every suggestion must be specific to the response. Avoid generic interview advice.
+- Never use repetitive phrases such as:
+  - "Try to present your thoughts more specifically."
+  - "Be more confident."
+  - "Improve your communication."
+  unless they are genuinely supported by the response.
+- If suggesting an improvement, explain exactly what is missing or could be improved.
+- Mention at least one positive aspect of the response whenever possible.
+- Focus on content first, then clarity, then communication.
+- If the response is already strong, explicitly say so instead of inventing unnecessary improvements.
+- Keep the tone professional, balanced, and constructive.
+- Do NOT repeat the interview question.
+- Do NOT explain the score.
+- Keep feedback concise (50–120 words).
 
 Return ONLY valid JSON in this format:
 {
